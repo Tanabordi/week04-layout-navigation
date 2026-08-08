@@ -62,11 +62,11 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 12),
 
               SizedBox(
-                height: 280,
+                height: 310,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: featured.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 16),
+                  separatorBuilder: (context, index) => const SizedBox(width: 16),
                   itemBuilder: (context, index) {
                     final dest = featured[index];
                     return SizedBox(

@@ -73,7 +73,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
     
     return LayoutBuilder(
       builder: (context, constraints) {
-        print('Screen Width: $screenWidth, Constraints Max Width: ${constraints.maxWidth}');
+        debugPrint('Screen Width: $screenWidth, Constraints Max Width: ${constraints.maxWidth}');
 
         int crossAxisCount;
         if (constraints.maxWidth < 600) {
@@ -92,7 +92,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
             crossAxisCount: crossAxisCount,
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
-            childAspectRatio: 0.72,
+            childAspectRatio: 0.65,
           ),
           itemCount: _filteredDestinations.length,
           itemBuilder: (context, index) {
