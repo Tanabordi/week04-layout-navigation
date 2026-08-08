@@ -20,10 +20,10 @@ class ProfileScreen extends StatelessWidget {
                   child: Icon(Icons.person, size: 48, color: Colors.white),
                 ),
                 SizedBox(height: 12),
-                Text('นักศึกษา Flutter',
+                Text('นายธนบดี บุญภมร',
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                Text('student@example.com',
+                Text('67030298@kmitl.ac.th',
                     style: TextStyle(color: Colors.grey)),
               ],
             ),
