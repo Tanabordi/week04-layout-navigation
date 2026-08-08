@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../models/destination.dart';
+import '../models/saved_state.dart';
 
 class DestinationDetailScreen extends StatelessWidget {
   final Destination destination;
@@ -35,15 +36,25 @@ class DestinationDetailScreen extends StatelessWidget {
               color: Colors.black.withValues(alpha: 0.45),
               shape: BoxShape.circle,
             ),
-            child: IconButton(
-              icon: const Icon(Icons.favorite_border, color: Colors.white),
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text('บันทึก ${destination.name} แล้ว!'),
-                      duration: const Duration(seconds: 2)),
+            child: ValueListenableBuilder<Set<String>>(
+              valueListenable: SavedState.savedIds,
+              builder: (context, savedIds, _) {
+                final isSaved = savedIds.contains(destination.id);
+                return IconButton(
+                  icon: Icon(
+                    isSaved ? Icons.favorite : Icons.favorite_border, 
+                    color: isSaved ? Colors.red : Colors.white,
+                  ),
+                  onPressed: () {
+                    SavedState.toggleSave(destination.id);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text(isSaved ? 'ยกเลิกการบันทึกแล้ว' : 'บันทึก ${destination.name} แล้ว!'),
+                          duration: const Duration(seconds: 2)),
+                    );
+                  },
                 );
-              },
+              }
             ),
           ),
         ],
