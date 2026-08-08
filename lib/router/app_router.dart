@@ -88,25 +88,42 @@ final GoRouter appRouter = GoRouter(
                 GoRoute(
                   path: 'destinations/:id',
                   name: 'destination-detail',
-                  builder: (context, state) {
+                  pageBuilder: (context, state) {
                     final id = state.pathParameters['id'];
                     final extraDest = state.extra as Destination?;
                     
+                    Widget screen;
                     if (extraDest != null) {
-                      return DestinationDetailScreen(destination: extraDest);
+                      screen = DestinationDetailScreen(destination: extraDest);
+                    } else {
+                      final matchedList = sampleDestinations.where((d) => d.id == id).toList();
+                      if (matchedList.isEmpty) {
+                        screen = Scaffold(
+                          appBar: AppBar(title: const Text('Error')),
+                          body: const Center(
+                            child: Text('ไม่พบข้อมูลที่ต้องการ'),
+                          ),
+                        );
+                      } else {
+                        screen = DestinationDetailScreen(destination: matchedList.first);
+                      }
                     }
                     
-                    final matchedList = sampleDestinations.where((d) => d.id == id).toList();
-                    if (matchedList.isEmpty) {
-                      return Scaffold(
-                        appBar: AppBar(title: const Text('Error')),
-                        body: const Center(
-                          child: Text('ไม่พบข้อมูลที่ต้องการ'),
-                        ),
-                      );
-                    }
-                    
-                    return DestinationDetailScreen(destination: matchedList.first);
+                    return CustomTransitionPage(
+                      child: screen,
+                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        return SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(1.0, 0.0),
+                            end: Offset.zero,
+                          ).animate(CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.easeInOut,
+                          )),
+                          child: child,
+                        );
+                      },
+                    );
                   },
                 ),
               ],

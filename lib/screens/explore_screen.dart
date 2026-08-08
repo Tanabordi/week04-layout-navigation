@@ -12,19 +12,30 @@ class ExploreScreen extends StatefulWidget {
 
 class _ExploreScreenState extends State<ExploreScreen> {
   String _searchQuery = '';
+  String _selectedTag = 'ทั้งหมด';
+  final List<String> _allTags = ['ทั้งหมด', 'ทะเล', 'ธรรมชาติ', 'วัฒนธรรม', 'อาหาร', 'ช้อปปิ้ง'];
 
   List<Destination> get _filteredDestinations {
-    if (_searchQuery.isEmpty) return sampleDestinations;
-    return sampleDestinations
-        .where(
-          (d) =>
-              d.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-              d.country.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-              d.tags.any(
-                (t) => t.toLowerCase().contains(_searchQuery.toLowerCase()),
-              ),
-        )
-        .toList();
+    var filtered = sampleDestinations;
+    
+    if (_selectedTag != 'ทั้งหมด') {
+      filtered = filtered.where((d) => d.tags.contains(_selectedTag)).toList();
+    }
+    
+    if (_searchQuery.isNotEmpty) {
+      filtered = filtered
+          .where(
+            (d) =>
+                d.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+                d.country.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+                d.tags.any(
+                  (t) => t.toLowerCase().contains(_searchQuery.toLowerCase()),
+                ),
+          )
+          .toList();
+    }
+    
+    return filtered;
   }
 
   @override
@@ -50,6 +61,25 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 filled: true,
                 fillColor: Colors.grey.shade100,
               ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 40,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: _allTags.length,
+              separatorBuilder: (context, index) => const SizedBox(width: 8),
+              itemBuilder: (context, index) {
+                final tag = _allTags[index];
+                final isSelected = tag == _selectedTag;
+                return FilterChip(
+                  label: Text(tag),
+                  selected: isSelected,
+                  onSelected: (_) => setState(() => _selectedTag = tag),
+                );
+              },
             ),
           ),
           const SizedBox(height: 12),
